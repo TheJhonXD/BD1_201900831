@@ -1,10 +1,10 @@
 const db = require('../db/conexion');
-const script = require('../db/script');
+const { script_create_model } = require('../db/script');
 
-let modelo = async(req, res) => {
+let model = async(req, res) => {
     try {
         // Eliminar los comentarios del script
-        const sanitize_script = script.replace(/\/\*[\s\S]*?\*\/|\/\/.*/g, '');
+        const sanitize_script = script_create_model.replace(/\/\*[\s\S]*?\*\/|\/\/.*/g, '');
 
         /* Ejecutar el script SQL */
         const sqlCmds = sanitize_script.split(';').map(cmd => cmd.trim());
@@ -25,4 +25,4 @@ let modelo = async(req, res) => {
     }
 }
 
-module.exports = { modelo };
+module.exports = { model };

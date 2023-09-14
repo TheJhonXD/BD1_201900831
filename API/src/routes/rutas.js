@@ -1,8 +1,10 @@
 const express = require('express');
 const router = express.Router();
 
-const { modelo } = require('../controllers/createmodel');
+const { model } = require('../controllers/createmodel');
+const { deleteModel } = require('../controllers/delete_model');
 
-router.get('/crearmodelo', modelo);
+router.get('/crearmodelo', model);
+router.get('/eliminarmodelo', deleteModel);
 
 module.exports = router;
