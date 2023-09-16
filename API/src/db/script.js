@@ -230,5 +230,28 @@ const query_4 = `
     PARTIDO.nombre;
 `;
 
+const query_5 = `
+  SELECT 
+    DEPARTAMENTO.nombre AS "Departamento",
+    COUNT(VOTO.id) AS "Cantidad_Votaciones"
+  FROM 
+    bd1_p1.VOTO
+  JOIN 
+    bd1_p1.MESA ON VOTO.id_mesa = MESA.id
+  JOIN 
+    bd1_p1.DEPARTAMENTO ON MESA.id_dep = DEPARTAMENTO.id
+  GROUP BY 
+    DEPARTAMENTO.nombre;
+`;
 
-module.exports = { script_create_model, script_delete_model, script_create_tmp_tables, query_1, query_2, query_3, query_4 };
+const query_6 = `
+  SELECT 
+    COUNT(*) AS "Nulos"
+  FROM 
+    bd1_p1.DETALLE_VOTO
+  WHERE 
+    DETALLE_VOTO.id_candidato = -1;
+`;
+
+
+module.exports = { script_create_model, script_delete_model, script_create_tmp_tables, query_1, query_2, query_3, query_4, query_5, query_6 };
