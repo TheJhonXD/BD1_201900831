@@ -253,5 +253,95 @@ const query_6 = `
     DETALLE_VOTO.id_candidato = -1;
 `;
 
+const query_7 = `
+  SELECT 
+	CIUDADANO.edad AS "Edad",
+    COUNT(*) AS "Cantidad"
+  FROM 
+    bd1_p1.CIUDADANO
+  JOIN
+	  bd1_p1.VOTO ON CIUDADANO.dpi = VOTO.dpi
+  GROUP BY
+	  CIUDADANO.edad
+  ORDER BY
+	  COUNT(*) DESC, CIUDADANO.edad 
+  LIMIT 10;
+`;
 
-module.exports = { script_create_model, script_delete_model, script_create_tmp_tables, query_1, query_2, query_3, query_4, query_5, query_6 };
+const query_8 = `
+  SELECT 
+    Presi.nombre AS "Presidente",
+    Vice.nombre AS "Vicepresidente",
+    COUNT(*) AS "Votos_totales"
+  FROM 
+    bd1_p1.DETALLE_VOTO
+  JOIN 
+    bd1_p1.CANDIDATO AS Presi ON DETALLE_VOTO.id_candidato = Presi.id
+  JOIN 
+    bd1_p1.CANDIDATO AS Vice ON Vice.id_partido = Presi.id_partido
+  JOIN 
+    bd1_p1.VOTO ON DETALLE_VOTO.id_voto = VOTO.id
+  WHERE 
+    Presi.id_cargo = 1 AND Vice.id_cargo = 2
+  GROUP BY 
+    Presi.nombre, Vice.nombre
+  ORDER BY 
+    COUNT(*) DESC
+  LIMIT 10;
+`;
+
+const query_9 = `
+  SELECT 
+    MESA.id AS "No_Mesa",
+    DEPARTAMENTO.nombre AS "Departamento",
+    COUNT(*) AS "Cantidad_votos",
+    Frecuencia.freq AS "Frecuencia"
+  FROM 
+    bd1_p1.MESA
+  JOIN 
+    bd1_p1.DEPARTAMENTO ON MESA.id_dep = DEPARTAMENTO.id
+  JOIN 
+    bd1_p1.VOTO ON MESA.id = VOTO.id_mesa
+  JOIN 
+	  bd1_p1.DETALLE_VOTO ON VOTO.id = DETALLE_VOTO.id_voto
+  JOIN (
+    SELECT 
+      VOTO.id_mesa AS idmesa,
+      COUNT(*) AS freq
+    FROM 
+      bd1_p1.VOTO
+    GROUP BY 
+      bd1_p1.VOTO.id_mesa) AS Frecuencia ON MESA.id = Frecuencia.idmesa
+  GROUP BY 
+    MESA.id, DEPARTAMENTO.nombre, Frecuencia.freq
+  ORDER BY 
+    COUNT(*) DESC
+  LIMIT 5;
+`;
+
+const query_10 = `
+  SELECT 
+    DATE_FORMAT(VOTO.fechahora, '%H:%i') AS "Hora",
+    COUNT(*) AS "Cantidad_votos"
+  FROM 
+    bd1_p1.VOTO
+  GROUP BY 
+    DATE_FORMAT(fechahora, '%H:%i')
+  ORDER BY 
+    COUNT(*) DESC
+  LIMIT 5;
+`;
+
+const query_11 = `
+  SELECT 
+    CIUDADANO.genero AS "Genero",
+    COUNT(*) AS "Cantidad_votos"
+  FROM 
+    bd1_p1.VOTO
+  JOIN
+	  bd1_p1.CIUDADANO ON VOTO.dpi = CIUDADANO.dpi
+  GROUP BY 
+    CIUDADANO.genero;
+`;
+
+module.exports = { script_create_model, script_delete_model, script_create_tmp_tables, query_1, query_2, query_3, query_4, query_5, query_6, query_7, query_8, query_9, query_10, query_11 };

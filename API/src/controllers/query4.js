@@ -6,23 +6,13 @@ let query4 = async(req, res) => {
         // Eliminar los comentarios del script
         const sanitize_script = query_4.replace(/\/\*[\s\S]*?\*\/|\/\/.*/g, '');
 
-        /* Ejecutar el script SQL */
-        const sqlCmds = sanitize_script.split(';').map(cmd => cmd.trim());
-        let result;
- 
-        for (let i=0; i<sqlCmds.length; i++) {
-            let sql = sqlCmds[i];
-            if (sql.length === 0) {
-                continue;
-            }
-            result = await db.query(sql, []);
-        }
-        // console.log(result);
-        res.status(200).json({ consulta: 4, rows: result.length, return: result });
+       /* Ejecutar el script SQL */
+       let result = await db.query(sanitize_script, []);
+       res.status(200).json({ consulta: 4, rows: result.length, return: result });
 
     } catch (err) {
         console.log(err);
-        res.status(500).json({ message: "Ocurrio un problema al ejecutar la consulta 1", err });
+        res.status(500).json({ message: "Ocurrio un problema al ejecutar la consulta 4", err });
     }
 }
 

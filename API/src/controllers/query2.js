@@ -7,22 +7,12 @@ let query2 = async(req, res) => {
         const sanitize_script = query_2.replace(/\/\*[\s\S]*?\*\/|\/\/.*/g, '');
 
         /* Ejecutar el script SQL */
-        const sqlCmds = sanitize_script.split(';').map(cmd => cmd.trim());
-        let result;
- 
-        for (let i=0; i<sqlCmds.length; i++) {
-            let sql = sqlCmds[i];
-            if (sql.length === 0) {
-                continue;
-            }
-            result = await db.query(sql, []);
-        }
-        // console.log(result);
+        let result = await db.query(sanitize_script, []);
         res.status(200).json({ consulta: 2, rows: result.length, return: result });
 
     } catch (err) {
         console.log(err);
-        res.status(500).json({ message: "Ocurrio un problema al ejecutar la consulta 1", err });
+        res.status(500).json({ message: "Ocurrio un problema al ejecutar la consulta 2", err });
     }
 }
 

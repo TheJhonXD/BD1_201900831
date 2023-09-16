@@ -7,17 +7,7 @@ let query1 = async(req, res) => {
         const sanitize_script = query_1.replace(/\/\*[\s\S]*?\*\/|\/\/.*/g, '');
 
         /* Ejecutar el script SQL */
-        const sqlCmds = sanitize_script.split(';').map(cmd => cmd.trim());
-        let result;
- 
-        for (let i=0; i<sqlCmds.length; i++) {
-            let sql = sqlCmds[i];
-            if (sql.length === 0) {
-                continue;
-            }
-            result = await db.query(sql, []);
-        }
-        // console.log(result);
+        let result = await db.query(sanitize_script, []);
         res.status(200).json({ consulta: 1, rows: result.length, return: result });
 
     } catch (err) {
