@@ -1,0 +1,130 @@
+-- CREAR BASE DE DATOS
+
+CREATE SCHEMA IF NOT EXISTS bd_p2;
+
+-- TABLA CARRERA
+
+CREATE TABLE IF NOT EXISTS bd_p2.CARRERA (
+    id INTEGER NOT NULL AUTO_INCREMENT,
+    carrera VARCHAR(50) NOT NULL,
+    PRIMARY KEY (id)
+);
+
+-- TABLA CURSO
+
+CREATE TABLE IF NOT EXISTS bd_p2.CURSO (
+    codigo INTEGER NOT NULL,
+    curso VARCHAR(50) NOT NULL,
+    creditos_necesarios INTEGER NOT NULL,
+    creditos_otorga INTEGER NOT NULL,
+    obligatorio BOOLEAN NOT NULL,
+    id_carrera INTEGER NOT NULL,
+    PRIMARY KEY (codigo),
+    FOREIGN KEY (id_carrera) REFERENCES bd_p2.CARRERA(id)
+);
+
+-- TABLA DOCENTE
+
+CREATE TABLE IF NOT EXISTS bd_p2.DOCENTE (
+    siif INTEGER NOT NULL,
+    nombre VARCHAR(50) NOT NULL,
+    apellido VARCHAR(50) NOT NULL,
+    fecha_nac DATE NOT NULL,
+    correo VARCHAR(50) NOT NULL,
+    telefono INTEGER NOT NULL,
+    direccion VARCHAR(50) NOT NULL,
+    dpi BIGINT NOT NULL,
+    PRIMARY KEY (siif)
+);
+
+-- TABLA CURSO_HABILITADO
+
+CREATE TABLE IF NOT EXISTS bd_p2.CURSO_HABILITADO (
+    id INTEGER NOT NULL AUTO_INCREMENT,
+    ciclo VARCHAR(2) NOT NULL,
+    cupo_max INTEGER NOT NULL,
+    seccion CHAR(1) NOT NULL,
+    anio_actual DATE NOT NULL,
+    cantidad_estudiantes INTEGER NOT NULL,
+    id_curso INTEGER NOT NULL,
+    id_docente INTEGER NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (id_curso) REFERENCES bd_p2.CURSO(codigo),
+    FOREIGN KEY (id_docente) REFERENCES bd_p2.DOCENTE(siif)
+);
+
+-- TABLA ACTA
+
+CREATE TABLE IF NOT EXISTS bd_p2.ACTA (
+    id INTEGER NOT NULL AUTO_INCREMENT,
+    ciclo VARCHAR(2) NOT NULL,
+    seccion CHAR(1) NOT NULL,
+    fechahora DATETIME NOT NULL,
+    id_curso_habilitado INTEGER NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (id_curso_habilitado) REFERENCES bd_p2.CURSO_HABILITADO(id)
+);
+
+-- TABLA HORARIO
+
+CREATE TABLE IF NOT EXISTS bd_p2.HORARIO (
+    id INTEGER NOT NULL AUTO_INCREMENT,
+    dia VARCHAR(10) NOT NULL,
+    hora VARCHAR(20) NOT NULL,
+    id_curso_habilitado INTEGER NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (id_curso_habilitado) REFERENCES bd_p2.CURSO_HABILITADO(id)
+);
+
+-- TABLA ESTUDIANTE
+
+CREATE TABLE IF NOT EXISTS bd_p2.ESTUDIANTE (
+    carnet BIGINT NOT NULL,
+    nombre VARCHAR(50) NOT NULL,
+    apellido VARCHAR(50) NOT NULL,
+    fecha_nac DATE NOT NULL,
+    correo VARCHAR(50) NOT NULL,
+    telefono INTEGER NOT NULL,
+    direccion VARCHAR(50) NOT NULL,
+    dpi BIGINT NOT NULL,
+    id_carrera INTEGER NOT NULL,
+    PRIMARY KEY (carnet)
+);
+
+-- TABLA ASIGNACION
+
+CREATE TABLE IF NOT EXISTS bd_p2.ASIGNACION (
+    id INTEGER NOT NULL AUTO_INCREMENT,
+    ciclo VARCHAR(2) NOT NULL,
+    seccion CHAR(1) NOT NULL,
+    id_curso_habilitado INTEGER NOT NULL,
+    id_estudiante BIGINT NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (id_curso_habilitado) REFERENCES bd_p2.CURSO_HABILITADO(id),
+    FOREIGN KEY (id_estudiante) REFERENCES bd_p2.ESTUDIANTE(carnet)
+);
+
+-- TABLA DESASIGNACION
+
+CREATE TABLE IF NOT EXISTS bd_p2.DESASIGNACION (
+    id INTEGER NOT NULL AUTO_INCREMENT,
+    codigo_curso INTEGER NOT NULL,
+    ciclo VARCHAR(2) NOT NULL,
+    seccion CHAR(1) NOT NULL,
+    id_estudiante BIGINT NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (id_estudiante) REFERENCES bd_p2.ESTUDIANTE(carnet)
+);
+
+-- TABLA NOTA
+
+CREATE TABLE IF NOT EXISTS bd_p2.NOTA (
+    id INTEGER NOT NULL AUTO_INCREMENT,
+    ciclo VARCHAR(2) NOT NULL,
+    seccion CHAR(1) NOT NULL,
+    codigo_curso INTEGER NOT NULL,
+    nota INTEGER NOT NULL,
+    id_estudiante BIGINT NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (id_estudiante) REFERENCES bd_p2.ESTUDIANTE(carnet)
+);
